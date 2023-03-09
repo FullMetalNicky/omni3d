@@ -17,4 +17,4 @@ DATASETS:
 MODEL:
   ROI_HEADS:
     NUM_CLASSES: 14
-  WEIGHTS: '' # 'cubercnn_DLA34_FPN.pth'
+  WEIGHTS: 'cubercnn_DLA34_FPN.pth'
