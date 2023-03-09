@@ -94,7 +94,7 @@ def visualize_from_instances(detections, dataset, dataset_name, min_size_test, o
 
     for imind, im_obj in enumerate(detections):
         
-        write_sample = ((imind % 50) == 0)
+        write_sample = ((imind % 5) == 0)
         
         annos = dataset._dataset[imind]['annotations']
         gt_boxes_2d = np.array([anno['bbox'] for anno in annos])

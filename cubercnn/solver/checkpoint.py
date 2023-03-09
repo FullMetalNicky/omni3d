@@ -20,7 +20,7 @@ class PeriodicCheckpointerOnlyOne(PeriodicCheckpointer):
             
             # simply save a single recent model
             self.checkpointer.save(
-                "{}_recent".format(self.file_prefix), **additional_state
+                "{}_recent_{}".format(self.file_prefix, iteration), **additional_state
             )
 
         if self.max_iter is not None:

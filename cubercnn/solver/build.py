@@ -47,6 +47,8 @@ def build_optimizer(cfg, model):
             params += [{"params": [value], "lr": lr, "weight_decay": weight_decay}]
 
     if cfg.SOLVER.TYPE == 'sgd':
+        for param in params:
+            if param['weight_decay'] == None: param['weight_decay'] = 0
         optimizer = torch.optim.SGD(params, cfg.SOLVER.BASE_LR, momentum=cfg.SOLVER.MOMENTUM, nesterov=cfg.SOLVER.NESTEROV)
 
     elif cfg.SOLVER.TYPE == 'adam':

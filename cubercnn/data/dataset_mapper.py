@@ -33,7 +33,7 @@ class DatasetMapper3D(DatasetMapper):
         # but not efficient on large generic data structures due to the use of pickle & mp.Queue.
         # Therefore it's important to use torch.Tensor.
         dataset_dict["image"] = torch.as_tensor(np.ascontiguousarray(image.transpose(2, 0, 1)))
-
+        
         # no need for additoinal processing at inference
         if not self.is_train:
             return dataset_dict
@@ -42,9 +42,8 @@ class DatasetMapper3D(DatasetMapper):
 
             dataset_id = dataset_dict['dataset_id']
             K = np.array(dataset_dict['K'])
-
-            unknown_categories = self.dataset_id_to_unknown_cats[dataset_id]
-
+            unknown_categories = self.dataset_id_to_unknown_cats[str(dataset_id)]
+            
             # transform and pop off annotations
             annos = [
                 transform_instance_annotations(obj, transforms, K=K)

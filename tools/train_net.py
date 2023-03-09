@@ -92,9 +92,8 @@ def do_test(cfg, model, iteration='final', storage=None):
         evaluator = Omni3DEvaluator(
             dataset_name, output_dir=output_folder, 
             filter_settings=filter_settings, only_2d=only_2d, 
-            eval_prox=('Objectron' in dataset_name or 'SUNRGBD' in dataset_name)
+            eval_prox=True #('Objectron' in dataset_name or 'SUNRGBD' in dataset_name)
         )
-
         results_i = inference_on_dataset(model, data_loader, evaluator)
         results[dataset_name] = results_i
 
@@ -327,7 +326,7 @@ def do_train(cfg, model, dataset_id_to_unknown_cats, dataset_id_to_src, resume=F
 
     optimizer = build_optimizer(cfg, model)
     scheduler = build_lr_scheduler(cfg, optimizer)
-
+    
     # bookkeeping
     checkpointer = DetectionCheckpointer(model, cfg.OUTPUT_DIR, optimizer=optimizer, scheduler=scheduler)    
     periodic_checkpointer = PeriodicCheckpointerOnlyOne(checkpointer, cfg.SOLVER.CHECKPOINT_PERIOD, max_iter=max_iter)
@@ -378,10 +377,9 @@ def do_train(cfg, model, dataset_id_to_unknown_cats, dataset_id_to_src, resume=F
     with EventStorage(start_iter) as storage:
         
         while True:
-
             data = next(data_iter)
             storage.iter = iteration
-
+            
             # forward
             loss_dict = model(data)
             losses = sum(loss_dict.values())
@@ -631,6 +629,7 @@ def main(args):
             unknown_categories = possible_categories - known_category_training_ids
             dataset_id_to_unknown_cats[dataset_id] = unknown_categories
 
+
             # log the per-dataset categories
             logger.info('Available categories for {}'.format(info['name']))
             logger.info([thing_classes[i] for i in (possible_categories & known_category_training_ids)])
@@ -649,9 +648,9 @@ def main(args):
         # build the training model.
         model = build_model(cfg, priors=priors)
 
-        if remaining_attempts == MAX_TRAINING_ATTEMPTS:
+        # if remaining_attempts == MAX_TRAINING_ATTEMPTS:
             # log the first attempt's settings.
-            logger.info("Model:\n{}".format(model))
+            # logger.info("Model:\n{}".format(model))
 
         if args.eval_only:
             # skip straight to eval mode
@@ -714,7 +713,8 @@ def allreduce_dict(input_dict, average=True):
 
 if __name__ == "__main__":
     args = default_argument_parser().parse_args()
-    print("Command Line Args:", args)
+    # print("Command Line Args:", args)
+
     launch(
         main,
         args.num_gpus,

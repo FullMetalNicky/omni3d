@@ -314,7 +314,6 @@ def compute_priors(cfg, datasets, max_cluster_rounds=1000, min_points_for_std=5)
     for ann_idx, ann in enumerate(anns):
 
         category_name = ann['category_name'].lower()
-
         ignore = ann['ignore']
         dataset_id = ann['dataset_id']
         image_id = ann['image_id']
@@ -383,8 +382,7 @@ def compute_priors(cfg, datasets, max_cluster_rounds=1000, min_points_for_std=5)
         '''
         First compute static variable statistics
         '''
-
-        scales = torch.FloatTensor(np.array(df_cat.scale))
+        scales = torch.FloatTensor(np.array(df_cat.scale).astype(np.float))
         n = len(scales)
 
         if n > 0:
